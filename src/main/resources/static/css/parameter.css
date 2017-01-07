@@ -1,0 +1,40 @@
+.param {
+	margin: 0 auto;
+	margin-top: 50px;
+	text-align: center;
+	width: 297px;
+}
+
+.param input {
+	width: 50px;
+}
+
+.param form {
+	width: 100%;
+}
+
+.param #sumit {
+	margin-top: 20px;
+	margin-bottom: 600px;
+}
+
+.param p {
+	display: block;
+}
+
+.param p span {
+	display: inline-block;
+	width: 200px;
+	text-align: right;
+	color: #4c4c4c;
+	font-family: "Microsoft YaHei UI"
+}
+
+.param p label input {
+	display: inline-block;
+	width: 50px;
+}
+
+.param input[type="submit"] {
+	width: 100%;
+}

@@ -1,0 +1,64 @@
+body {
+}
+
+
+.container .image{
+	float: left;
+	margin: 20px 40px;
+	width: 400px;
+	height: 400px;
+}
+
+.detail {
+	float: left;
+	margin-top: 20px;
+	margin-left: 50px;
+	margin-bottom: 50px;
+}
+
+.detail ul {
+	padding: 0px;
+}
+
+.detail .buy {
+	width: 120px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	color: white;
+	background-color: #ffaaaa;
+}
+
+.detail li {
+	list-style: none;
+	font-size: 15px;
+	color: #AAA;
+	line-height: 50px;
+}
+
+.info {
+	margin: 20px;
+	padding: 50px;
+	clear: both;
+	overflow: hidden;
+	border: 1px solid #c6c6c6;
+}
+
+.info table {
+	margin: 0 auto;
+	width: 80%;
+}
+
+.info th {
+	background-color: #f5f5f5;
+	color: #999;
+}
+
+.info td, .info th {
+	padding: 5px 20px;
+}
+
+.info td, .info th, .info table{
+	border: 1px solid #c4c4c4;
+	border-collapse: collapse;
+}
