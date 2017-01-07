@@ -33,7 +33,7 @@ public class Config {
 	public static final int LIMITNUMBER = MA_SIZE;
 	
 	/**
-	 *  图像及颜色配置信息
+	 *  图像及颜色配置信息 COMMIT TEST
 	 */
 	
 	public final static int H_DIMENSION = 16;
