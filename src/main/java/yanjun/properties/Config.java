@@ -6,9 +6,9 @@ public class Config {
 	 */
 	
 	public static final String dbDriver = "com.mysql.jdbc.Driver";
-	public static final String dbUrl = "jdbc:mysql://localhost/FarbicDB";
+	public static final String dbUrl = "jdbc:mysql://localhost/A_FarbicDB";
 	public static final String dbUser = "root";
-	public static final String dbPass = "";
+	public static final String dbPass = "3265986";
 	
 	public static final String dbTable = "16H10S10V85fabricMA";
 	
@@ -17,7 +17,7 @@ public class Config {
 	/**
 	 * 资源路径
 	 */
-	public static final String resourcePath = "http://0.0.0.0:4567/"; //localhost:8000/";//"src/test/resources/";
+	public static final String resourcePath = "http://127.0.0.1:4567/"; //localhost:8000/";//"src/test/resources/";
 	
 	public static final String uploadImageFile = "upload/";
 	
