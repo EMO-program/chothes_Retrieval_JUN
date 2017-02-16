@@ -42,7 +42,7 @@ public class MinkowskiWithScale implements ISimilarityMap {
 		double minSize = minMap.size();
 
 		double count = 1;
-
+       //ratio表示两个直方图的大向量数和小向量数之比（比如一个是5，一个是4，那就是1.25）
 		double ratio = maxSize / minSize;
 		double inverseRation = 1.0 / ratio;
 		double tempRatio = ratio;
@@ -51,10 +51,10 @@ public class MinkowskiWithScale implements ISimilarityMap {
 
 		double totalColorDiff = 0;
 		double totalValueDiff = 0;
-
+        //若ratio大于阈值（4）则直接判断为不相似
 		if (ratio > Config.scaleRatio)
 			return Config.MAX_DISTANCE;
-
+       //将直方图向量较少的图进行拉伸（使直方图变矮然后自然会水平拉长）
 		if (minSize < maxSize)
 			for (Entry<Integer, Double> entry : minMap.entrySet())
 				minMap.put(entry.getKey(), entry.getValue() * inverseRation);
@@ -71,8 +71,8 @@ public class MinkowskiWithScale implements ISimilarityMap {
 		
 		sameQuantiNum = 0;
 		sameQuantiArea = 0;
-		
-		int index = 0;
+
+		int index = 0;//计算下面while循环次数也就是bin的比较次数索引
 		double threshold = maxSize * Config.sameColorNumPercent;
 
 		while (maxIt.hasNext()) {
@@ -80,6 +80,7 @@ public class MinkowskiWithScale implements ISimilarityMap {
 			if (index++ <= threshold) {
 				if (sameColorNum >= Math.floor(threshold) && sameColorQuantity >= Config.sameColorNumPercent)
 					return 0;
+				//满足上面两个条件则直接判断两个图片一样，即距离返回0
 			}
 			
 //			if (index < maxSize * threshold) {
@@ -182,8 +183,9 @@ public class MinkowskiWithScale implements ISimilarityMap {
 //		 return totalColorDiff * Math.pow(totalValueDiff, 1/r);
 
 //		return 0.7 * totalColorDiff + 0.3 * Math.pow(totalValueDiff, 1 / r);
-		
-		return totalColorDiff * (1 - Math.pow(totalValueDiff, 1/r));
+		System.out.print("hehe");
+		double a=totalColorDiff * (1 - Math.pow(totalValueDiff, 1/r));
+		return a;
 
 		// // 颜色值相同情况下, 相同颜色数量大于C同时其统计量大于一半以上
 		// if (sameColorNum / maxSize >= 0.8 && sameColorQuantity >= 0.6)

@@ -16,13 +16,14 @@ public class Model {
 		int end = storePath.indexOf(".");
 		String imgPath = storePath.substring(index);
 		String fabricName = storePath.substring(index+10, end);
-		
+
 		
 		Fabric fabric = new Fabric();
 		fabric.setFabricId(fabricId);
 		fabric.setFabricName(fabricName);
 		fabric.setStorePath(imgPath);
-		
+        //查看布匹详情（根据id）
+		System.out.println("使用了Model的getFabric方法");
 		return fabric;
 	}
 }

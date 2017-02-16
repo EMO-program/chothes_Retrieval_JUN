@@ -49,7 +49,7 @@ public class Config {
 	// 直方图排序后取TOP_N的值
 	public static final int TopNValueOfHis = 128; 
 	
-	// 取排序后的白分量
+	// 取排序后的白分量（获取各颜色分量的频率百分比最大总和）
 	public static final float TopPercentage = 0.85f;
 	
 	// 误差调整
@@ -62,14 +62,14 @@ public class Config {
 	// 计算相似度
 	public static final boolean SIMILARITY = false;
 	
-	// 检索返回结果数
+	// 检索中间返回结果数
 	public static float resultNumber = 100;
-	
-	public static final float finalResultNumber = 24;
+	// 检索最后返回结果数
+	public static final float finalResultNumber = 10;
 	
 	public static final float MAX_DISTANCE = 100;
 	
-	// 相同颜色bin百分比
+	// 相同颜色bin百分比（直方图向量数量百分百）
 	public static float sameColorNumPercent = 0.3f;
 	// 相同颜色统计量百分比
 	public static float sameColorQuantityPercent = 0.85f;

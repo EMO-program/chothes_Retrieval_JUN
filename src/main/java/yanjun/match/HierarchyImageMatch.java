@@ -39,8 +39,8 @@ public class HierarchyImageMatch {
 
 		// 返回查询结果
 		List<String> matchUrls = new ArrayList<String>();
+
 		// 保存检索排序结果
-		
 		Map<String, Double> colorResMap = new HashMap<String, Double>();
 		Map<String, String> textureResMap = new HashMap<String, String>();
 
@@ -51,6 +51,7 @@ public class HierarchyImageMatch {
 
 			bufferImage = ImageIO.read(imageFile);
 			// 获取HSV量化后的颜色直方图数据 一维向量表示
+			//得到图片的颜色一维数组特征向量（各颜色分量频率（统计量））
 			double[] sourceHist = ColorUtil.getImageHSV(bufferImage);
 			double[] lbpSourceFecture = LBP.getLBPFeature(imgPath);
 			
@@ -58,8 +59,9 @@ public class HierarchyImageMatch {
 			for (int i = 0; i < sourceHist.length; i++) {
 				sourceHistMap.put(i, sourceHist[i]);
 			}
-			
+			//直方图排序
 			sourceHistMap = MatchUtil.sortByValue(sourceHistMap);
+			//取直方图频率总量百分之85的向量
 			sourceHistMap = MatchUtil.getSamePercentage(sourceHistMap, Config.TopPercentage);
 			
 //			for(Entry<Integer, Double> entry : sourceHistMap.entrySet()) {
@@ -73,7 +75,7 @@ public class HierarchyImageMatch {
 
 			// long startTime = System.currentTimeMillis();
 
-			// 每一条数据库对应的数据
+			// 计算每一条数据库对应的图像数据其颜色相似度并存储colorResMap中；把每个条数据的路径和纹理特征提取出来并存储在textureResMap的键值对中。
 			double tempRes = 0;
 			for (int i = 0; i < list.size(); i++) {
 
@@ -82,10 +84,11 @@ public class HierarchyImageMatch {
 				Object candidateData = map.get("histogram");
 				Object candidatePath = map.get("path");
 				Object candidateLBP = map.get("lbpFeature");
-				
+
+				//先进行颜色匹配
 				Map<Integer, Double> candidateHistMap = MatchUtil.jsonToMap2((String)candidateData);
 				Map<Integer, Double> tempSourceHistMap = new LinkedHashMap<Integer, Double>(sourceHistMap);
-			
+
 				
 				// 计算相似度
 				tempRes = colorStrategy.similarity(tempSourceHistMap, candidateHistMap);
@@ -102,7 +105,7 @@ public class HierarchyImageMatch {
 			Map<String, Double> tempResultMap;
 			
 			System.out.println("Min Distance : " + (float) minDistance);
-			tempResultMap = MatchUtil.sortByValueAsc(colorResMap);
+			tempResultMap = MatchUtil.sortByValueAsc(colorResMap);//先将经过颜色匹配的排序过的所有结果存储在临时结果集合里
 		
 			int counter = 0;
 
@@ -113,7 +116,7 @@ public class HierarchyImageMatch {
 					break;
 
 				// 从快速搜索中选取TOP N结果，继续进行纹理特征匹配
-
+               //获取当前由颜色匹配相似度排序的结果并提取其LBP纹理特征
 				String candidateLBPFecture = textureResMap.get(map.getKey());
 				
 				double[] lbpTargetFeature = MatchUtil.jsonToArr(candidateLBPFecture);
@@ -132,7 +135,7 @@ public class HierarchyImageMatch {
 			for (Map.Entry<String, Double> map : finalResult.entrySet()) {
 				if (counter >= Config.finalResultNumber)
 					break;
-				
+				//matchUrls截取只存储finalResultNumber数量的查询结果
 				matchUrls.add(map.getKey());
 				counter ++;
 				System.out.println(map.getValue() + " " + map.getKey());

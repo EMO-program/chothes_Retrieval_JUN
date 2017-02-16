@@ -35,7 +35,7 @@ public class ColorUtil {
 		getRGB(src, 0, 0, width, height, pixels);
 		getHSVVector(width, height, pixels, G);
 		
-		// normalize histogram data
+		// normalize histogram data 将每个分量数量转换成百分制
 		for (int i = 0; i <  G.length; i++)
 			G[i] = G[i] / total;
 		
@@ -63,6 +63,7 @@ public class ColorUtil {
 			int r = 0, g = 0, b = 0;
 			for (int col = 0; col < width; col++) {
 				index = row * width + col;
+				// & 0xff 这个操作将负数变为正
 				r = (pixels[index] >> 16) & 0xff;
 				g = (pixels[index] >> 8) & 0xff;
 				b = (pixels[index]) & 0xff;
@@ -78,7 +79,9 @@ public class ColorUtil {
 				//H用10bit存储
 				//S与V用4bit存储
 				int _index = (H<<(Sbit+Vbit)) | (S<<Vbit) | (V);
+				//拼合HSV的值
 				g2[ _index]++;
+				//g2统计每个HSV值的数量
 			}
 		}
 		

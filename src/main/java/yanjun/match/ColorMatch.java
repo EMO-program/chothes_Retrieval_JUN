@@ -50,22 +50,26 @@ public class ColorMatch {
 			bufferImage = ImageIO.read(imageFile);
 			// 获取HSV量化后的颜色直方图数据 一维向量表示
 			long start = System.currentTimeMillis();
-			
+			//得到图片的颜色一维数组特征向量（各颜色分量频率（统计量））
 			double[] sourceHist = ColorUtil.getImageHSV(bufferImage);
 			
 			Map<Integer, Double> sourceHistMap = new LinkedHashMap<Integer, Double>();
 			for (int i = 0; i < sourceHist.length; i++) {
 				sourceHistMap.put(i, sourceHist[i]);
 			}
-			
+			//直方图排序
 			sourceHistMap = MatchUtil.sortByValue(sourceHistMap);
+			//取直方图频率总量百分之85的向量
 			sourceHistMap = MatchUtil.getSamePercentage(sourceHistMap, Config.TopPercentage);
-			
+
+			//计算提取单个图片的颜色特征的时间
 			long end = System.currentTimeMillis();
 			logger.debug("extrect color feature cost: " + (end - start) + "ms");
-			
+			//System.out.print("extrect color feature cost: " + (end - start) + "ms");
 			// 提取数据库数据
 //			List<Object> list = DBHelper.fetchALLCloth();
+
+			//list 取到最大数量limit的图片数据
 			List<Object> list = DBHelper.fetchClothLimit(Config.LIMITNUMBER);
 			
 
@@ -100,7 +104,7 @@ public class ColorMatch {
 
 				if (counter >= Config.finalResultNumber)
 					break;
-				
+				//matchUrls截取只存储finalResultNumber数量的查询结果
 				matchUrls.add(map.getKey());
 				counter++;
 				logger.debug(map.getValue() + " " + map.getKey());

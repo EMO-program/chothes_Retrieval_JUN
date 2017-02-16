@@ -9,11 +9,11 @@ import javax.imageio.ImageIO;
 public class LBP {
 	final static double PI = 3.14159265358979323846;
 
-	static final int PREDICATE = 2;
+	static final int PREDICATE = 2;//LBP半径R
 
-	static final int BITS = 8;
-	static final int DIFF = PREDICATE << 1;
-	public static final int PATSNUM = 58;
+	static final int BITS = 8;//LBP邻点数量P
+	static final int DIFF = PREDICATE << 1;//边缘点的数量？
+	public static final int PATSNUM = 58;//uniform patterns 数
 	
 	// uniform patterns
 	static final int UNIPATS[] = { 0, 1, 2, 3, 4, 6, 7, 8, 12, 14, 15, 16, 24,
@@ -31,7 +31,7 @@ public class LBP {
 		double x;
 		double y;
 	}
-
+	//圆形LBP邻点坐标辅助计算
 	IntegerPoint[] points;
 	DoublePoint[] offsets;
 
@@ -60,7 +60,7 @@ public class LBP {
 
 		double step = 2 * PI / BITS;
 		double tmpX, tmpY;
-
+        //圆形LBP实现原理
 		for (bit = 0; bit < BITS; bit++) {
 			// bit * step 为角度
 			tmpX = PREDICATE * Math.cos(bit * step);
@@ -93,7 +93,7 @@ public class LBP {
 //			System.out.println(" offset x: " + offsets[bit].x + " offset y: " + offsets[bit].y);
 		}
 	}
-
+    //处理对角线上的邻点（1，2，4，6），计算其坐标位置并计算出它的灰度值返回结果
 	double interpolate(int ul, int rl, int lb, int rb, int i) {
 		double dx = 1 - offsets[i].x;
 		double dy = 1 - offsets[i].y;
@@ -116,7 +116,7 @@ public class LBP {
 
 		int leap = column * PREDICATE;
 
-		// nb - index of points
+		// nb - index of points（8个邻点坐标计算）
 		int[] nb = new int[8];
 
 		nb[0] = 0;
@@ -141,10 +141,10 @@ public class LBP {
 		
 //		for (int j = 0; j < nb.length; j++)
 //			System.out.println(nb[j]);
-
+       //遍历时忽略DIFF个边缘点
 		for (r = 0; r < row - DIFF; r++) {
 			for (c = 0; c < column - DIFF; c++) {
-				value[0] = 0;
+				value[0] = 0;//存储LBP特征值
 				
 				compareNeighbors(value, data[center], data[nb[1]], 1);
 				compareNeighbors(value, data[center], data[nb[3]], 3);
@@ -177,7 +177,7 @@ public class LBP {
 				}
 
 				center++;
-
+				//统计各个LBP值的出现频率
 				hist81[value[0]]++;
 			}
 
@@ -188,25 +188,25 @@ public class LBP {
 			center += DIFF;
 		}
 	}
-
+    //将灰度图片执行lbp算法
 	public void lbpFeature(int[] img, int height, int width, double[] feature) {
 		int i;
-		int sum = 0;
-		int sumpats = 0;
+		int sum = 0;//图像被计算的总像素数
+		int sumpats = 0;//uniform模式的总像素数
 
 		calculatePoints();
-
+        //用于存储uniform统一化截减前的完整LBP特征
 		int[] histFull = new int[256];
 
 		for (i = 0; i < 256; i++) {
 			histFull[i] = 0;
 		}
-
+        //开始计算LBP特征值并将结果存放至histFull中
 		histogram81(img, height, width, histFull);
 		
 //		for (int j = 0; j < histFull.length; j++)
 //			System.out.println(histFull[j]);
-
+       //将符合uniform模式的LBP特征值提取出来作为最终纹理特征
 		for (i = 0; i < PATSNUM; i++) {
 			feature[i] = histFull[UNIPATS[i]];
 			sumpats += feature[i];
@@ -216,15 +216,15 @@ public class LBP {
 			sum += histFull[i];
 		}
 
-		feature[PATSNUM] = sum - sumpats;
-
+		feature[PATSNUM] = sum - sumpats;//特征向量最后一位存储全部计算像素与uniform截取的像素的差值
+        //统一化（将特征转成百分比频率）
 		for (i = 0; i < feature.length; i++) {
 			feature[i] = feature[i] / (float) sum;
 		}
 	}
 
 	
-	
+	//特征提取方法
 	public static double[] getLBPFeature(String imgPath) {
 		int i, j;
 
@@ -238,7 +238,7 @@ public class LBP {
 
 		BufferedImage img;
       try {
-	      img = ImageIO.read(new File(imgPath));
+	      img = ImageIO.read(new File(imgPath));//读取参数路径的图片数据
 	      height = img.getHeight();
 			width = img.getWidth();
 
@@ -246,7 +246,7 @@ public class LBP {
 
 			LBP lbp = new LBP();
 
-			
+			//著名的心理学公式
 			// 彩色图像转换成无彩色的灰度图像Y=0.299*R + 0.578*G + 0.114*B
 			for (i = 0; i < width; i++) {
 				for (j = 0; j < height; j++) {
@@ -288,11 +288,12 @@ public class LBP {
 	}
 	
 	
-	
+
 	public static void main(String[] args) {
-		String path1 = "src/test/resources/fabric252/1.jpg";
-		String path2 = "src/test/resources/fabric252/2.jpg";
-		
+		//String path1 = "src/test/resources/fabric252/1.jpg";
+		//String path2 = "src/test/resources/fabric252/2.jpg";
+		String path1 = "upload/94";
+		String path2 = "upload/23";
 		LBP lbp = new LBP();
 		double[] feature1 = lbp.getLBPFeature(path1);
 		double[] feature2 = lbp.getLBPFeature(path2);
@@ -304,7 +305,8 @@ public class LBP {
 		
 		for (double f : feature2)
 			System.out.print(f + ", ");
-		
+
+
 	}
 	
 }

@@ -69,9 +69,15 @@ public class App {
 		});
 
 		get("/parameter", (req, res) -> {
-			return freeMarkerEngine.render(new ModelAndView(null, "parameter.ftl"));
-		});
+			Map p_attributes = new HashMap<>();
+			p_attributes.put("scaleRatio", Config.scaleRatio);
+			p_attributes.put("SCNPercent", Config.sameColorNumPercent);
+			p_attributes.put("SCQPercent", Config.sameColorQuantityPercent);
+			p_attributes.put("resultNumber", Config.resultNumber);
 
+			return freeMarkerEngine.render(new ModelAndView(p_attributes, "parameter.ftl"));
+		});
+        //首页参数设置
 		post("/parameter", (req, res) -> {
 
 			String body = req.body();
@@ -105,7 +111,7 @@ public class App {
 
 		});
 
-
+        //主页搜索主方法路径”/upload“
 		post("/upload", "multipart/form-data", (req, res) -> {
 
 			logger.debug("scaleRatio: " + Config.scaleRatio);
@@ -129,12 +135,15 @@ public class App {
 			String queryImagePath = Config.uploadImageFile + uploadImageName;
 
 			// read query image url
+			//颜色匹配方法定义
 			ColorMatch colorMatch = new ColorMatch(new MinkowskiWithScale());
+			//多层匹配方法定义
 			HierarchyImageMatch hierarchyImageMatch = new HierarchyImageMatch(new MinkowskiWithScale(), new MinkowskiArrayDistance());
 
-			// 相似度计算
-//	      List<String> resultImagePaths = colorMatch.calcSimilarity(queryImagePath);
+			// 通过颜色相似度检索结果
+	     // List<String> resultImagePaths = colorMatch.calcSimilarity(queryImagePath);
 			// 传入上传路径
+			//通过多层检索计算输入图像和数据库所有图片相似度（颜色加纹理），并返回finalResultNumber张搜索结果的路径
 			List<String> resultImagePaths = hierarchyImageMatch.calcSimilarity(queryImagePath);
 
 
@@ -143,6 +152,7 @@ public class App {
 			result.setQueryName(uploadImageName);
 
 //	      LinkedList<ImageUrl> urlsFound = new LinkedList<ImageUrl>();
+			//将搜索结果图片路径转变成工程当地路径用于输出
 			List<String> handleResultPaths = new ArrayList<String>();
 			for (String resultImagePath : resultImagePaths) {
 				String imageName = resultImagePath.substring(resultImagePath
@@ -152,7 +162,7 @@ public class App {
 //		      logger.debug(resultPath);
 //		      urlsFound.add(new ImageUrl(resultPath));
 			}
-
+            //将输入图片以及搜索结果都存在result里面
 			result.setResList(handleResultPaths);
 
 
