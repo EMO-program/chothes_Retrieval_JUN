@@ -12,6 +12,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import yanjun.properties.Config;
+import yanjun.texture.LBP;
+import yanjun.texture.LTxXORP;
 import yanjun.util.ColorUtil;
 import yanjun.util.DBHelper;
 import yanjun.util.MatchUtil;
@@ -20,6 +22,31 @@ import com.google.gson.Gson;
 
 public class DBStore {
 
+	public static void main(String[] args) {
+		String path = null;
+	//	LTxXORP.setRotaIvaPats();
+		for (int i = 1; i <= 1628; i++) {
+			path = "src/main/resources/static/Farbic-MA/" + i + ".jpg";
+			storeTextureToDB(path);
+			//storeToDB2(path);
+		}
+
+		// for (int i = 0; i <= 9; i++) {
+		//
+		// path = "ukbench/full/ukbench0000" + i + ".jpg";
+		// storeToDB(path);
+		// }
+		//
+		// for (int i = 10; i <= 99; i++) {
+		// path = "ukbench/full/ukbench000" + i + ".jpg";
+		// storeToDB(path);
+		// }
+		//
+		// for (int i = 100; i <= 999; i++) {
+		// path = "ukbench/full/ukbench00" + i + ".jpg";
+		// storeToDB(path);
+		// }
+	}
 	public static void storeToDB2(String path) {
 		FileInputStream imageFile;
 		try {
@@ -103,36 +130,36 @@ public class DBStore {
 	}
 	
 	
-//	public static void storeTextureToDB(String path) {
-//		FileInputStream imageFile;
-//		try {
-//			imageFile = new FileInputStream(path);
-//			BufferedImage bufferImage;
-//
-//			bufferImage = ImageIO.read(imageFile);
-//			// 获取HSV量化后的直方图数据 一维向量表示
-//			double[] lbpFeature = LBP.getLBPFeature(path);
-//
-//			
-//			String lbpString = new Gson().toJson(lbpFeature);
-//
-//			// String sql = "update base_cloth set histogram = ? where path = ?";
-//			String sql = "insert into " + Config.dbTable
-//			      + " (path, lbpFeature) values (?, ?)";
-//
-//			// Object[] data = {jsonObject.toString(), path};
-//			Object[] data = { path, lbpString };
-//			
-//			DBHelper.updateData(sql, data);
-//
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	public static void storeTextureToDB(String path) {
+		FileInputStream imageFile;
+		try {
+			imageFile = new FileInputStream(path);
+			BufferedImage bufferImage;
+
+			bufferImage = ImageIO.read(imageFile);
+
+			// 获取HSV量化后的直方图数据 一维向量表示
+			double[] lbpFeature = LBP.getLBPFeature(path);
+
+			String lbpString = new Gson().toJson(lbpFeature);
+
+			// String sql = "update base_cloth set histogram = ? where path = ?";
+			String sql = "insert into " + Config.dbTable
+			      + " (path, lbpFeature) values (?, ?)";
+
+			// Object[] data = {jsonObject.toString(), path};
+			Object[] data = { path, lbpString };
+
+			DBHelper.updateData(sql, data);
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public static void storeToDBArr(String path) {
 		File imageFile = new File(path);

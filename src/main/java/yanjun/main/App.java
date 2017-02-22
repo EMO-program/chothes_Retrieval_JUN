@@ -30,6 +30,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 import yanjun.color.similariry.impl.MinkowskiWithScale;
 import yanjun.match.ColorMatch;
 import yanjun.match.HierarchyImageMatch;
+import yanjun.match.TextureMatch;
 import yanjun.model.Fabric;
 import yanjun.model.Model;
 import yanjun.model.Result;
@@ -137,14 +138,16 @@ public class App {
 			// read query image url
 			//颜色匹配方法定义
 			ColorMatch colorMatch = new ColorMatch(new MinkowskiWithScale());
+			TextureMatch textureMatch=new TextureMatch(new MinkowskiArrayDistance());
 			//多层匹配方法定义
 			HierarchyImageMatch hierarchyImageMatch = new HierarchyImageMatch(new MinkowskiWithScale(), new MinkowskiArrayDistance());
 
 			// 通过颜色相似度检索结果
 	     // List<String> resultImagePaths = colorMatch.calcSimilarity(queryImagePath);
-			// 传入上传路径
+			//通过纹理相似度来检索结果
+	     List<String> resultImagePaths = textureMatch.calcSimilarity(queryImagePath);
 			//通过多层检索计算输入图像和数据库所有图片相似度（颜色加纹理），并返回finalResultNumber张搜索结果的路径
-			List<String> resultImagePaths = hierarchyImageMatch.calcSimilarity(queryImagePath);
+		//	List<String> resultImagePaths = hierarchyImageMatch.calcSimilarity(queryImagePath);
 
 
 			Result result = new Result();

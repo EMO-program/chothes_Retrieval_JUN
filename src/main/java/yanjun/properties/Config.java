@@ -10,8 +10,9 @@ public class Config {
 	public static final String dbUser = "root";
 	public static final String dbPass = "3265986";
 	
-	public static final String dbTable = "16H10S10V85fabricMA";
-	
+//	public static final String dbTable = "16H10S10V85fabricMA";
+    public static final String dbTable = "t2r1p8o1g2w1d1ma";
+
 //	public static final String dbTable = "LBP16AND2fabric300";
 	
 	/**
